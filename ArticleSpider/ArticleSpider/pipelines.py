@@ -72,7 +72,7 @@ class MysqlTwistedPipeline(object):
     def process_item(self, item, spider):
         # 使用twisted将mysql插入变成异步执行
         Query = self.dbpool.runInteraction(self.do_insert, item)
-        Query.addErrback(self.handle_error) # 处理异常
+        Query.addErrback(self.handle_error)  # 处理异常
 
     def handle_error(self, failure):
         # 处理异步输入的异常
@@ -81,10 +81,10 @@ class MysqlTwistedPipeline(object):
     def do_insert(self, cursor, item):
         # 执行具体输入
         insert_sql = """
-                    insert into jobbole_article(title, url, create_date, fav_nums)
-                    VALUES (%s, %s, %s, %s)
+                    insert into jobbole_article(title, url, create_date, fav_nums, url_object_id)
+                    VALUES (%s, %s, %s, %s, %s)
                 """
-        cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"]))
+        cursor.execute(insert_sql, (item["title"], item["url"], item["create_date"], item["fav_nums"], item['url_object_id']))
 
 
 
@@ -106,8 +106,8 @@ class JsonExporterPipeline(object):
 
 class ArticleImagePipeline(ImagesPipeline):
     def item_completed(self, results, item, info):
-        for ok, value in results:
-            image_file_path = value['path']
-        item['front_image_path'] = image_file_path
-
+        if 'front_image_url' in item:
+            for ok, value in results:
+                image_file_path = value['path']
+            item['front_image_path'] = image_file_path
         return item
