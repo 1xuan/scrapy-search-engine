@@ -87,7 +87,7 @@ FORM_DATA = {
     'username': '',
     'password': '',
     # 改为'cn'是倒立汉字验证码
-    'lang': 'en',
+    'lang': 'cn',
     'ref_source': 'homepage'
 }
 
@@ -239,7 +239,16 @@ class ZhihuAccount(object):
                 password = input('请输入密码：')
         return username, password
 
+    def get_page(self, url):
+        response = self.session.get(url, headers=self.session.headers.copy())
+        return response
+
 
 if __name__ == '__main__':
     account = ZhihuAccount()
     account.login(username=None, password=None, load_cookies=True)
+
+
+
+
+
