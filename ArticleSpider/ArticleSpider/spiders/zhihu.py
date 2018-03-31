@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import requests
+
+from urllib import parse
+
 from ArticleSpider.utils.zhihu_login import ZhihuAccount
 
 HEADERS = {
@@ -29,7 +33,16 @@ class ZhihuSpider(scrapy.Spider):
     start_urls = ['http://www.zhihu.com/']
 
     def parse(self, response):
-        pass
+        """
+        提取出html页面中的所有url， 并跟踪这也url进一步爬取
+        如果提取的url中格式为/question/xxx， 就下载之后直接进入解析
+        :param response:
+        :return:
+        """
+        all_urls = response.xpath('//*/@href').extract()
+        all_urls = [parse.urljoin(response.url, url) for url in all_urls]
+        for url in all_urls:
+            pass
 
     def start_requests(self):
         return [scrapy.Request('https://www.zhihu.com/signup?next=%2F', headers=HEADERS, callback=self.login)]
@@ -40,7 +53,7 @@ class ZhihuSpider(scrapy.Spider):
         if ret:
             for url in self.start_urls:
                 rep = account.get_page(url)
-                yield self.parse(rep)
+                yield scrapy.Request(url, dont_filter=True, headers=account.session.headers, cookies=requests.utils.dict_from_cookiejar(account.session.cookies), callback=self.parse)
 
 
 
