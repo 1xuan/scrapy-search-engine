@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-import scrapy
-import requests
+import re
+import json
 
 from urllib import parse
+import scrapy
+import requests
+from scrapy.loader import ItemLoader
 
 from ArticleSpider.utils.zhihu_login import ZhihuAccount
+from ..items import ZhihuAnswerItem, ZhihuQuestionItem
 
 HEADERS = {
     'Connection': 'keep-alive',
@@ -41,23 +45,53 @@ class ZhihuSpider(scrapy.Spider):
         """
         all_urls = response.xpath('//*/@href').extract()
         all_urls = [parse.urljoin(response.url, url) for url in all_urls]
+        all_urls = filter(lambda x: True if x.startswith('https') else False, all_urls)
         for url in all_urls:
-            pass
+            match_obj = re.match(r"(.*?zhihu.com/question/(\d+))(/|$).*", url)
+            if match_obj:
+                # 如果提取到question相关页面， 则调用parse_question处理
+                request_url = match_obj.group(1)
+                yield scrapy.Request(request_url, headers=self.account.session.headers, cookies=requests.utils.dict_from_cookiejar(self.account.session.cookies), callback=self.parse_question)
+            else:
+                # 如果没有提取到question相关页面， 则进一步跟踪
+                yield scrapy.Request(url, headers=self.account.session.headers,
+                                     cookies=requests.utils.dict_from_cookiejar(self.account.session.cookies),
+                                     callback=self.parse)
+
+    def parse_question(self, response):
+        # 处理question页面，从页面中提取出具体的question item
+        item_loader = ItemLoader(item=ZhihuQuestionItem(), response=response)
+        item_loader.add_xpath('title', '//div[@class="QuestionHeader-title"]/a/text()')
+        item_loader.add_xpath('content', '//span[@itemprop="text"]/text()')
+        item_loader.add_value('url', response.url)
+
+        match_obj = re.match(r"(.*?zhihu.com/question/(\d+))(/|$).*", response.url)
+        if match_obj:
+            question_id = match_obj.group(2)
+
+        item_loader.add_value('zhihu_id', question_id)
+        item_loader.add_xpath('answer_num', '//h4[@class="List-headerText"]/span/text()')
+        item_loader.add_xpath('watch_user_num', '//main[@role="main"]/div[1]/meta[@itemprop="zhihu:followerCount"]/@content')
+        item_loader.add_xpath('topics', '//main[@role="main"]/div[1]/meta[@itemprop="keywords"]/@content')
+
+        question_item = item_loader.load_item()
+        pass
 
     def start_requests(self):
         return [scrapy.Request('https://www.zhihu.com/signup?next=%2F', headers=HEADERS, callback=self.login)]
 
     def login(self, response):
-        account = ZhihuAccount()
-        ret = account.login(username='13108169041', password='zh951103', load_cookies=True)
+        self.account = ZhihuAccount()
+        ret = self.account.login(username='13108169041', password='zh951103', load_cookies=True)
         if ret:
             for url in self.start_urls:
-                rep = account.get_page(url)
-                yield scrapy.Request(url, dont_filter=True, headers=account.session.headers, cookies=requests.utils.dict_from_cookiejar(account.session.cookies), callback=self.parse)
+                yield scrapy.Request(url, dont_filter=True, headers=self.account.session.headers, cookies=requests.utils.dict_from_cookiejar(self.account.session.cookies), callback=self.parse)
 
 
 
-
+    """
+    把请求头部和表单信息交给scrapy去请求
+    """
     # def login(self, response):
     #
     #     post_url = 'https://www.zhihu.com/api/v3/oauth/sign_in'
