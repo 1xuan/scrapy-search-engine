@@ -103,4 +103,5 @@ class ZhihuAnswerItem(scrapy.Item):
     parise_num = scrapy.Field()
     comments_num = scrapy.Field()
     create_time = scrapy.Field()
+    update_time = scrapy.Field()
     crawl_time = scrapy.Field()
