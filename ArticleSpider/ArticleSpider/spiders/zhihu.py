@@ -72,7 +72,7 @@ class ZhihuSpider(scrapy.Spider):
 
         match_obj = re.match(r"(.*?zhihu.com/question/(\d+))(/|$).*", response.url)
         if match_obj:
-            question_id = match_obj.group(2)
+            question_id = int(match_obj.group(2))
 
         item_loader.add_value('zhihu_id', question_id)
         item_loader.add_xpath('answer_num', '//h4[@class="List-headerText"]/span/text()')
@@ -94,6 +94,7 @@ class ZhihuSpider(scrapy.Spider):
         for answer in ans_json['data']:
             answer_item = ZhihuAnswerItem()
             answer_item['zhihu_id'] = answer['id']
+            answer_item['url'] = answer['url']
             answer_item['question_id'] = answer['question']['id']
             answer_item['author_id'] = answer['author']['id'] if 'id' in answer['author'] else None
             answer_item['content'] = answer['content'] if 'content' in answer else None
