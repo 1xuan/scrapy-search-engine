@@ -57,7 +57,7 @@ __date__ = '下午9:01'
 #     session.cookies.save()
 #
 #
-# zhihu_login('13108169041', 'zh951103')
+# zhihu_login('你的帐号', '你的密码')
 #
 
 import requests

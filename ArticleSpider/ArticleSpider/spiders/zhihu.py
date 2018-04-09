@@ -114,7 +114,7 @@ class ZhihuSpider(scrapy.Spider):
 
     def login(self, response):
         self.account = ZhihuAccount()
-        ret = self.account.login(username='13108169041', password='zh951103', load_cookies=True)
+        ret = self.account.login(username='你的帐号', password='你的密码', load_cookies=True)
         if ret:
             for url in self.start_urls:
                 yield scrapy.Request(url, dont_filter=True, headers=self.account.session.headers, cookies=requests.utils.dict_from_cookiejar(self.account.session.cookies), callback=self.parse)
