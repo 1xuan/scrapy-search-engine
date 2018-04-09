@@ -96,7 +96,7 @@ class ZhihuQuestionItem(scrapy.Item):
         # 插入知乎question表的sql语句
         insert_sql = """
             insert into zhihu_question(zhihu_id, topics, url, title, content, answer_num, watch_user_num)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE content=VALUES(content)
         """
 
         zhihu_id = self["zhihu_id"][0]
@@ -128,7 +128,7 @@ class ZhihuAnswerItem(scrapy.Item):
         # 插入知乎answer表的sql语句
         insert_sql = """
             insert into zhihu_answer(zhihu_id, question_id, url, author_id, content, parise_num, comments_num, create_time, update_time, crawl_time)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE content=VALUES(content), parise_num=VALUES(parise_num), comments_num=VALUES(comments_num), update_time=VALUES(update_time), crawl_time=VALUES(crawl_time)
         """
 
         create_time = datetime.datetime.fromtimestamp(self['create_time']).strftime(SQL_DATETIME_FORMAT)
