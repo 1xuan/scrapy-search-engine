@@ -5,6 +5,9 @@ import datetime
 from scrapy.http import Request
 from urllib import parse
 from scrapy.loader import ItemLoader
+from selenium import webdriver
+from scrapy.xlib.pydispatch import dispatcher
+from scrapy import signals
 
 from ArticleSpider.items import JobboleArticleItem, ArticleItemLoader
 from ArticleSpider.utils.common import get_md5
@@ -15,14 +18,17 @@ class JobboleSpider(scrapy.Spider):
     allowed_domains = ['blog.jobbole.com']
     start_urls = ['http://blog.jobbole.com/all-posts/']
 
-    def parse(self, response):
-        """
-        1.获取文章列表页中的文章url并交给scrapy下载后并进行解析
-        2.获取下一页的url并交给scrapy进行下载，下载完成后交给parse
-        :param response:
-        :return:
-        """
+    def __init__(self):
+        self.browser = webdriver.Firefox()
+        super(JobboleSpider, self).__init__()
+        dispatcher.connect(self.spider_closed, signals.spider_closed)
 
+    def spider_closed(self, spider):
+        # 当爬虫停止时退出browser
+        print("spider closed")
+        self.browser.quit()
+
+    def parse(self, response):
         # 解析列表页中的所有文章url并交给scrapy下载后并进行解析
         post_nodes = response.xpath('//div[@class="post-thumb"]')
         for post_node in post_nodes:

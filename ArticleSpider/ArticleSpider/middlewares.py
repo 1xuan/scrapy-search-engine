@@ -7,6 +7,7 @@
 
 from scrapy import signals
 from fake_useragent import UserAgent
+
 from .tools.crawl_xici_ip import GetIP
 
 
@@ -82,4 +83,20 @@ class RandomProxyMiddleware(object):
     def process_request(self, request, spider):
         get_ip = GetIP()
         request.meta['proxy'] = get_ip.get_random_ip()
+
+
+from scrapy.http import HtmlResponse
+
+
+class JSPageMiddleware(object):
+
+    # 通过firefox请求动态网页
+    def process_request(self, request, spider):
+        if spider.name == "jobbole":
+            # browser = webdriver.Firefox()
+            spider.browser.get(request.url)
+            print("访问{0}".format(request.url))
+
+            return HtmlResponse(url=spider.browser.current_url, body=spider.browser.page_source, encoding="utf-8", request=request)
+
 

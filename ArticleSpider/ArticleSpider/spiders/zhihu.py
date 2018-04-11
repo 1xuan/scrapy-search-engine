@@ -12,6 +12,10 @@ from ArticleSpider.utils.zhihu_login import ZhihuAccount
 from ..items import ZhihuAnswerItem, ZhihuQuestionItem
 
 
+custom_settings = {
+        "COOKIES_ENABLED": True,
+    }
+
 HEADERS = {
     'Connection': 'keep-alive',
     'Host': 'www.zhihu.com',

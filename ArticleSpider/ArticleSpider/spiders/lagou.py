@@ -15,7 +15,6 @@ class LagouSpider(CrawlSpider):
     start_urls = ['https://www.lagou.com/']
 
     custom_settings = {
-        "COOKIES_ENABLED": False,
         # "DOWNLOAD_DELAY": 1,
         'DEFAULT_REQUEST_HEADERS': {
             'Accept': 'application/json, text/javascript, */*; q=0.01',
