@@ -18,7 +18,8 @@ NEWSPIDER_MODULE = 'ArticleSpider.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'ArticleSpider (+http://www.yourdomain.com)'
+# 替换掉scrapy默认的user_agent
+USER_AGENT = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -54,9 +55,10 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'ArticleSpider.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'ArticleSpider.middlewares.MyCustomDownloaderMiddleware': None,
+    'ArticleSpider.middlewares.RandomUserAgentMiddleware': 1,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -99,6 +101,13 @@ IMAGES_MIN_WIDTH = 100
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+user_agent_list = [
+    "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+]
+
+RANDOM_UA_TYPE = "random"
 
 MYSQL_HOST = '127.0.0.1'
 MYSQL_DBNAME = 'article_spider'

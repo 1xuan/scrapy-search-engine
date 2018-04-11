@@ -71,12 +71,12 @@ import matplotlib.pyplot as plt
 from http import cookiejar
 from PIL import Image
 
+
 HEADERS = {
     'Connection': 'keep-alive',
     'Host': 'www.zhihu.com',
     'Referer': 'https://www.zhihu.com/',
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36'
+    'User-Agent': "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36",
     }
 LOGIN_URL = 'https://www.zhihu.com/signup'
 LOGIN_API = 'https://www.zhihu.com/api/v3/oauth/sign_in'
@@ -114,10 +114,16 @@ class ZhihuAccount(object):
             if self.check_login():
                 return True
 
+        from ..settings import user_agent_list
+        import random
+        random_index = random.randint(0, len(user_agent_list) - 1)
+        random_agent = user_agent_list[random_index]
+
         headers = self.session.headers.copy()
         headers.update({
             'authorization': 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20',
-            'X-Xsrftoken': self._get_token()
+            'X-Xsrftoken': self._get_token(),
+            'User-Agent': random_agent,
         })
         username, password = self._check_user_pass(username, password)
         self.login_data.update({
