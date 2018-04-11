@@ -34,8 +34,8 @@
       <file leaf-file-name="zhihu_login.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ArticleSpider/utils/zhihu_login.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+            <state relative-caret-position="190">
+              <caret line="40" column="1" lean-forward="true" selection-start-line="40" selection-start-column="1" selection-end-line="40" selection-end-column="1" />
               <folding>
                 <element signature="e#1404#1419#0" expanded="true" />
               </folding>
@@ -195,7 +195,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="4">
-    <option name="x" value="510" />
+    <option name="x" value="663" />
     <option name="y" value="24" />
     <option name="width" value="1136" />
     <option name="height" value="1056" />
@@ -420,7 +420,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="510" y="24" width="1136" height="1056" extended-state="4" />
+    <frame x="663" y="24" width="1136" height="1056" extended-state="4" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32901832" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50091743" side_tool="true" weight="0.32901832" />
@@ -428,8 +428,8 @@
       <window_info anchor="bottom" id="Version Control" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="9" weight="0.32901832" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49908257" weight="0.32901832" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49908257" weight="0.32901832" />
-      <window_info active="true" anchor="right" content_ui="combo" id="Project" order="5" visible="true" weight="0.20275229" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49908257" visible="true" weight="0.32901832" />
+      <window_info anchor="right" content_ui="combo" id="Project" order="5" visible="true" weight="0.20275229" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32901832" />
@@ -915,8 +915,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ArticleSpider/utils/zhihu_login.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+        <state relative-caret-position="190">
+          <caret line="40" column="1" lean-forward="true" selection-start-line="40" selection-start-column="1" selection-end-line="40" selection-end-column="1" />
           <folding>
             <element signature="e#1404#1419#0" expanded="true" />
           </folding>
