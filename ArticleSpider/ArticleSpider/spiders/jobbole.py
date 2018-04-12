@@ -9,6 +9,7 @@ from selenium import webdriver
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 
+
 from ArticleSpider.items import JobboleArticleItem, ArticleItemLoader
 from ArticleSpider.utils.common import get_md5
 
@@ -16,19 +17,37 @@ from ArticleSpider.utils.common import get_md5
 class JobboleSpider(scrapy.Spider):
     name = 'jobbole'
     allowed_domains = ['blog.jobbole.com']
-    start_urls = ['http://blog.jobbole.com/all-posts/']
+    start_urls = ['http://blog.jobbole.com/all-posts/yixuan/']
+
+    """
+    集成selenium到scrapy
+    """
+    # def __init__(self):
+    #     self.browser = webdriver.Firefox()
+    #     super(JobboleSpider, self).__init__()
+    #     dispatcher.connect(self.spider_closed, signals.spider_closed)
+    #
+    # def spider_closed(self, spider):
+    #     # 当爬虫停止时退出browser
+    #     print("spider closed")
+    #     self.browser.quit()
+
+    # 收集jobbole所有404url以及404页面
+    handle_httpstatus_list = [404]
 
     def __init__(self):
-        self.browser = webdriver.Firefox()
-        super(JobboleSpider, self).__init__()
-        dispatcher.connect(self.spider_closed, signals.spider_closed)
+        self.fail_ulrs = []
+        dispatcher.connect(self.handle_spider_closed, signals.spider_closed)
 
-    def spider_closed(self, spider):
-        # 当爬虫停止时退出browser
-        print("spider closed")
-        self.browser.quit()
+    def handle_spider_closed(self, spider, reason):
+        self.crawler.stats.set_value("failed_urls", ",".join(self.fail_ulrs))
+        pass
 
     def parse(self, response):
+        if response.status == 404:
+            self.fail_ulrs.append(response.url)
+            self.crawler.stats.inc_value("failed_url")
+
         # 解析列表页中的所有文章url并交给scrapy下载后并进行解析
         post_nodes = response.xpath('//div[@class="post-thumb"]')
         for post_node in post_nodes:
