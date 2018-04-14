@@ -33,20 +33,20 @@ class JobboleSpider(scrapy.Spider):
     #     self.browser.quit()
 
     # 收集jobbole所有404url以及404页面
-    handle_httpstatus_list = [404]
-
-    def __init__(self):
-        self.fail_ulrs = []
-        dispatcher.connect(self.handle_spider_closed, signals.spider_closed)
-
-    def handle_spider_closed(self, spider, reason):
-        self.crawler.stats.set_value("failed_urls", ",".join(self.fail_ulrs))
-        pass
+    # handle_httpstatus_list = [404]
+    #
+    # def __init__(self):
+    #     self.fail_ulrs = []
+    #     dispatcher.connect(self.handle_spider_closed, signals.spider_closed)
+    #
+    # def handle_spider_closed(self, spider, reason):
+    #     self.crawler.stats.set_value("failed_urls", ",".join(self.fail_ulrs))
+    #     pass
 
     def parse(self, response):
-        if response.status == 404:
-            self.fail_ulrs.append(response.url)
-            self.crawler.stats.inc_value("failed_url")
+        # if response.status == 404:
+        #     self.fail_ulrs.append(response.url)
+        #     self.crawler.stats.inc_value("failed_url")
 
         # 解析列表页中的所有文章url并交给scrapy下载后并进行解析
         post_nodes = response.xpath('//div[@class="post-thumb"]')
